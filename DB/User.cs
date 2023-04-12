@@ -25,8 +25,9 @@ namespace DB
         [Range(0, long.MaxValue, ErrorMessage = "The Balance field must be a positive long integer.")]
         public long Balance { get; set; } = 0;
 
-        public virtual ICollection<Operation> ReceivedOperations { get; set; }
-        public virtual ICollection<Operation> SendedOperations { get; set; }
+        public ICollection<Operation> ReceivedOperations { get; set; } = new List<Operation>();
+        public ICollection<Operation> SendedOperations { get; set; } = new List<Operation>();
+
         public void HashPassword()
         {
             using var sha256 = SHA256.Create();

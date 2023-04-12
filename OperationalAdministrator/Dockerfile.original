@@ -8,7 +8,6 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["OperationalAdministrator/OperationalAdministrator.csproj", "OperationalAdministrator/"]
-COPY ["DB/DB.csproj", "DB/"]
 RUN dotnet restore "OperationalAdministrator/OperationalAdministrator.csproj"
 COPY . .
 WORKDIR "/src/OperationalAdministrator"
@@ -21,3 +20,4 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "OperationalAdministrator.dll"]
+

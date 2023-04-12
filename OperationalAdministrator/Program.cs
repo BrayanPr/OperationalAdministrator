@@ -12,7 +12,7 @@ builder.Services.AddSwaggerGen();
     
 builder.Services.AddDbContext<OperationalAdministratorContext>(options =>
 {
-    options.UseMySql(builder.Configuration.GetConnectionString("OperationalAdministratorConnection"), Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.30-mysql"));
+    options.UseMySql(builder.Configuration.GetConnectionString("OperationalAdministratorConnection"), Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.32-mysql"));
 });
 
 var app = builder.Build();
