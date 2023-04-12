@@ -1,0 +1,6 @@
+FROM mysql/mysql-server
+COPY ./Deploy/01_createuser.sql /docker-entrypoint-initdb.d/
+COPY ./Deploy/02_populatedatabase.sql /docker-entrypoint-initdb.d/
+
+CREATE USER 'root'@'localhost' IDENTIFIED BY 'root';
+GRANT SELECT ON palicanon.* TO 'root'@'localhost' WITH GRANT OPTION;
