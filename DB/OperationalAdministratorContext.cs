@@ -4,6 +4,9 @@ namespace DB
 {
     public class OperationalAdministratorContext : DbContext
     {
+        public OperationalAdministratorContext()
+        {
+        }
 
         public OperationalAdministratorContext (DbContextOptions<OperationalAdministratorContext> options) : base (options) 
         {

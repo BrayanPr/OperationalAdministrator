@@ -1,5 +1,12 @@
-﻿using DB;
+﻿using System.Reflection.Metadata.Ecma335;
+using System.Security.Claims;
+using DB;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using OperationalAdministrator.Common;
+using OperationalAdministrator.Models;
+using OperationalAdministrator.Services.Interfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -9,73 +16,65 @@ namespace OperationalAdministrator.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        OperationalAdministratorContext context;
+        private readonly IUserService userService;
 
-        public UsersController(OperationalAdministratorContext _context)
+        public UsersController(IUserService service)
         {
-            context = _context;
+            userService = service;
         }
 
         // GET: api/<UsersControllercs>
         [HttpGet]
-        public IEnumerable<User> Get() => context.Users.ToList();
+        [Authorize]
+        public IEnumerable<User> Get() => userService.GetUsers();
 
         // GET api/<UsersControllercs>/5
         [HttpGet("{id}")]
+        [Authorize]
         public User Get(int id)
         {
-            User user = new User();
-
-            // Set the properties of the user instance
-            user = context.Users.Find(id);
-            if (user == null) return user;
-            user.HashPassword();  // Hash the user's password
-
-            return user;
+            return userService.getUser(id);
         }
 
         // POST api/<UsersControllercs>
         [HttpPost]
+        [Authorize]
         public void Post([FromBody] User user)
         {
-            user.HashPassword(); // Hash the user's password
-
-            // Add the user to the context and save changes
-            context.Users.Add(user);
-            context.SaveChanges();
+            userService.createUser(user);
         }
 
         // PUT api/<UsersControllercs>/5
         [HttpPut("{id}")]
+        [Authorize]
         public void Put(int id, [FromBody] User user)
         {
-            User existingUser = context.Users.Find(id);
-
-            if (existingUser != null)
-            {
-                // Update the existing user's properties with the new values
-                existingUser.Name = user.Name;
-                existingUser.Password = user.Password;
-                existingUser.Balance = user.Balance;
-                existingUser.HashPassword(); // Hash the user's password
-
-                // Save changes to the context
-                context.SaveChanges();
-            }
+            userService.replaceUser(id, user);
         }
 
         // DELETE api/<UsersControllercs>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        [Authorize]
+        public IActionResult Delete(int id)
         {
-            User userToDelete = context.Users.Find(id);
+            ClaimsIdentity identity = HttpContext.User.Identity as ClaimsIdentity;
 
-            if (userToDelete != null)
+            int? userId = JWT.verifyToken(identity);
+
+            if (userId == null)
             {
-                // Remove the user from the context and save changes
-                context.Users.Remove(userToDelete);
-                context.SaveChanges();
+                return Unauthorized("Token incorrecto");
             }
+
+            return userService.deleteUser(id) ? Ok() : StatusCode(500);
+        }
+
+        [HttpPost("login")]
+        public IActionResult Login([FromBody] AuthRequest model)
+        {
+            AuthResponse response = userService.Auth(model);
+
+            return response == null ? Unauthorized("error") : Ok(response);
         }
     }
 }

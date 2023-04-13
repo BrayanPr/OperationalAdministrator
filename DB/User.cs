@@ -28,11 +28,18 @@ namespace DB
         public ICollection<Operation> ReceivedOperations { get; set; } = new List<Operation>();
         public ICollection<Operation> SendedOperations { get; set; } = new List<Operation>();
 
-        public void HashPassword()
+        public void hashPassword()
         {
             using var sha256 = SHA256.Create();
             var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(Password));
             Password = Convert.ToBase64String(hashedBytes);
+        }
+        public bool verifyPassword(string password)
+        {
+            using var sha256 = SHA256.Create();
+            var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+            var hashedPassword = Convert.ToBase64String(hashedBytes);
+            return hashedPassword == Password;
         }
     }
 }
