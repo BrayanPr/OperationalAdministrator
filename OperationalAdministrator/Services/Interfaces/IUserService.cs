@@ -1,4 +1,5 @@
-﻿using DB;
+﻿using DB.Models;
+using DB.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using OperationalAdministrator.Models;
 
@@ -10,9 +11,9 @@ namespace OperationalAdministrator.Services.Interfaces
 
         public User? getUser(int id);
 
-        public User? createUser([FromBody] User user);
+        public User? createUser(UserDTO user);
 
-        public bool replaceUser(int id, [FromBody] User user);
+        public bool replaceUser(int id, UserDTO user);
 
         public bool deleteUser(int id);
 

@@ -2,6 +2,8 @@
 using System.Security.Claims;
 using System.Text;
 using DB;
+using DB.Models;
+using DB.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.IdentityModel.JsonWebTokens;
@@ -30,13 +32,21 @@ namespace OperationalAdministrator.Services
 
             return user;
         }
-        public User? createUser(User user)
+        public User? createUser(UserDTO user)
         {
-            
-            user.hashPassword(); // Hash the user's password
+            User newUser = new User()
+            {
+                Name = user.Name,
+                Email = user.Email,
+                Password = user.Password,
+                role = user.role,
+                TeamId = user.TeamId,
+            };
+
+            newUser.hashPassword(); // Hash the user's password
 
             // Add the user to the context and save changes
-            User nUser = _context.Users.Add(user).Entity;
+            User nUser = _context.Users.Add(newUser).Entity;
 
             // Verify the query executes correctly
             if(_context.SaveChanges() > 0){
@@ -46,7 +56,7 @@ namespace OperationalAdministrator.Services
             //else return null
             return null;
         }
-        public bool replaceUser(int id, User user)
+        public bool replaceUser(int id, UserDTO user)
         {
             User existingUser = _context.Users.Find(id);
 
@@ -55,7 +65,6 @@ namespace OperationalAdministrator.Services
                 // Update the existing user's properties with the new values
                 existingUser.Name = user.Name;
                 existingUser.Password = user.Password;
-                existingUser.Balance = user.Balance;
                 existingUser.hashPassword(); // Hash the user's password
 
                 // Save changes to the context
@@ -78,7 +87,7 @@ namespace OperationalAdministrator.Services
         }
         public AuthResponse? Auth(AuthRequest model)
         {
-            User? existingUser = _context.Users.Where(u => u.Name == model.name).FirstOrDefault();
+            User? existingUser = _context.Users.Where(u => u.Email == model.email).FirstOrDefault();
 
             if (existingUser == null || !existingUser.verifyPassword(model.password))
             {

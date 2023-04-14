@@ -1,6 +1,7 @@
 ﻿using System.Reflection.Metadata.Ecma335;
 using System.Security.Claims;
-using DB;
+using DB.Models;
+using DB.Models.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -39,15 +40,15 @@ namespace OperationalAdministrator.Controllers
         // POST api/<UsersControllercs>
         [HttpPost]
         [Authorize]
-        public void Post([FromBody] User user)
+        public IActionResult Post([FromBody] UserDTO user)
         {
-            userService.createUser(user);
+            return Ok(userService.createUser(user));
         }
 
         // PUT api/<UsersControllercs>/5
         [HttpPut("{id}")]
         [Authorize]
-        public void Put(int id, [FromBody] User user)
+        public void Put(int id, [FromBody] UserDTO user)
         {
             userService.replaceUser(id, user);
         }
