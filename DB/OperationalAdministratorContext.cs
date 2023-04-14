@@ -20,6 +20,12 @@ namespace DB
 
         public DbSet<Account> Accounts { get; set; }
 
+        public DbSet<Team> Teams { get; set; }
+
+        public DbSet<History> TeamHistory { get; set; }
+
+        public DbSet<Log> Logs { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Team>()

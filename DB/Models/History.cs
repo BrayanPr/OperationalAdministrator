@@ -14,12 +14,11 @@ namespace DB.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int HistoryId { get; set; }
 
-        [Required]
-        [StringLength(20)]
-        public string type { get; set; }
-
         public readonly DateTime date = DateTime.Now;
 
-        public string description = string.Empty;
+        public int NewTeam { get; set; }
+
+        public int? OldTeam { get; set; }
+
     }
 }

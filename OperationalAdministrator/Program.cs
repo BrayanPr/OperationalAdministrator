@@ -13,6 +13,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<ITeamService, TeamService>();
+
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(c =>
 {
