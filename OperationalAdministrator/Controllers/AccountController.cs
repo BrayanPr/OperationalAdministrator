@@ -1,6 +1,9 @@
-﻿using DB.Models;
+﻿using System.Security.Claims;
+using DB.Models;
 using DB.Models.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OperationalAdministrator.Common;
 using OperationalAdministrator.Services.Interfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -19,37 +22,52 @@ namespace OperationalAdministrator.Controllers
 
         // GET: api/<AccountController>
         [HttpGet]
-        public IEnumerable<Account> Get()
+        [Authorize]
+        public IActionResult Get()
         {
-            return service.GetAccounts();
+
+            if (!verifyAdmin(HttpContext.User.Identity as ClaimsIdentity)) return Unauthorized();
+            return Ok(service.GetAccounts());
         }
 
         // GET api/<AccountController>/5
         [HttpGet("{id}")]
-        public Account Get(int id)
+        [Authorize]
+        public IActionResult Get(int id)
         {
-            return service.getAccount(id);
+            if (!verifyAdmin(HttpContext.User.Identity as ClaimsIdentity)) return Unauthorized();
+            return Ok(service.getAccount(id));
         }
 
         // POST api/<AccountController>
         [HttpPost]
-        public Account Post([FromBody] AccountDTO account)
+        [Authorize]
+        public IActionResult Post([FromBody] AccountDTO account)
         {
-            return service.createAccount(account);
+            if (!verifyAdmin(HttpContext.User.Identity as ClaimsIdentity)) return Unauthorized();
+            return Ok(service.createAccount(account));
         }
 
-        // PUT api/<AccountController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
+        //// PUT api/<AccountController>/5
+        //[HttpPut("{id}")]
+        //public void Put(int id, [FromBody] string value)
+        //{
 
-        }
+        //}
 
         // DELETE api/<AccountController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        [Authorize]
+        public IActionResult Delete(int id)
         {
-            service.deleteAccount(id);
+            if (!verifyAdmin(HttpContext.User.Identity as ClaimsIdentity)) return Unauthorized();
+            return Ok(service.deleteAccount(id));
+        }
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public bool verifyAdmin(ClaimsIdentity identity)
+        {
+            string role = JWT.verifyToken(identity);
+            return (role == "admin" || role == "super_admin");
         }
     }
 }

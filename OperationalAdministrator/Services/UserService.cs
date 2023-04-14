@@ -40,7 +40,6 @@ namespace OperationalAdministrator.Services
                 Email = user.Email,
                 Password = user.Password,
                 role = user.role,
-                TeamId = user.TeamId,
             };
 
             newUser.hashPassword(); // Hash the user's password
@@ -101,7 +100,7 @@ namespace OperationalAdministrator.Services
                 new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
                 new Claim("id", existingUser.UserId.ToString()),
-                new Claim("Name", existingUser.Name),
+                new Claim("Role", existingUser.role),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Secret));

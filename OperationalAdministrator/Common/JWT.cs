@@ -9,13 +9,13 @@ namespace OperationalAdministrator.Common
         public string Audience { get; set; }
         public string Subject { get; set; }
 
-        public static int? verifyToken(ClaimsIdentity identity)
+        public static string verifyToken(ClaimsIdentity identity)
         {
             try
             {
                 if(identity.Claims.Count() == 0) return null;
 
-                return int.Parse(identity.Claims.FirstOrDefault(c => c.Type == "id").Value);
+                return identity.Claims.FirstOrDefault(c => c.Type == "Role").Value;
             }
             catch (Exception e)
             { 

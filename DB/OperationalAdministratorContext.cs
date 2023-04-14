@@ -39,6 +39,22 @@ namespace DB
                  .WithOne(e => e.Team)
                  .HasForeignKey(e => e.TeamId)
                  .HasPrincipalKey(e => e.TeamId);
+
+            modelBuilder.Entity<User>()
+                .HasIndex(e => e.Name)
+                .IsUnique();
+
+            modelBuilder.Entity<User>()
+                .HasIndex(e => e.Email)
+                .IsUnique();
+
+            modelBuilder.Entity<Team>()
+                .HasIndex(e => e.Name) 
+                .IsUnique();
+
+            modelBuilder.Entity<Account>()
+                .HasIndex(e => e.AccountName)
+                .IsUnique();
         }
     }
 }

@@ -24,7 +24,5 @@ namespace DB.Models.DTOs
 
         [Required]
         public string role { get; set; } = "user";
-
-        public int? TeamId { get; set; }
     }
 }

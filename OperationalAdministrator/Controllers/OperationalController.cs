@@ -1,4 +1,5 @@
-﻿using DB.Models;
+﻿using System.Security.Claims;
+using DB.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OperationalAdministrator.Common;
@@ -20,29 +21,41 @@ namespace OperationalAdministrator.Controllers
         }
 
         [HttpPost("move")]
-        public History MoveEmpoyees([FromBody] MoveUserRequest request)
+        public IActionResult MoveEmpoyees([FromBody] MoveUserRequest request)
         {
-            return service.MoveUser(request.userID, request.teamID);
+            if (!verifyAdmin(HttpContext.User.Identity as ClaimsIdentity)) return Unauthorized();
+            return Ok(service.MoveUser(request.userID, request.teamID));
         }
         [HttpGet("history")]
-        public IEnumerable<History> GetHistory()
+        public IActionResult GetHistory()
         {
-            return service.GetHistories();
+            if (!verifyAdmin(HttpContext.User.Identity as ClaimsIdentity)) return Unauthorized();
+            return Ok(service.GetHistories());
         }
         [HttpPost("history/date")]
-        public IEnumerable<History> GetHistoryByDates([FromBody] RequestHistoryByDate request)
+        public IActionResult GetHistoryByDates([FromBody] RequestHistoryByDate request)
         {
-            return service.GetHistoriesByDates(request.startDate, request.endDate);
+
+            if (!verifyAdmin(HttpContext.User.Identity as ClaimsIdentity)) return Unauthorized();
+            return Ok(service.GetHistoriesByDates(request.startDate, request.endDate));
         }
         [HttpGet("history/user")]
-        public IEnumerable<History> GetHistoryByUser([FromQuery] int userId)
+        public IActionResult GetHistoryByUser([FromQuery] int userId)
         {
-            return service.GetHistoriesByUser(userId);
+            if (!verifyAdmin(HttpContext.User.Identity as ClaimsIdentity)) return Unauthorized();
+            return Ok(service.GetHistoriesByUser(userId));
         }
         [HttpGet("history/team")]
-        public IEnumerable<History> GetHistoryByTeam([FromQuery] int teamId)
+        public IActionResult GetHistoryByTeam([FromQuery] int teamId)
         {
-            return service.GetHistoriesByTeam(teamId);
+            if (!verifyAdmin(HttpContext.User.Identity as ClaimsIdentity)) return Unauthorized();
+            return Ok(service.GetHistoriesByTeam(teamId));
+        }
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public bool verifyAdmin(ClaimsIdentity identity)
+        {
+            string role = JWT.verifyToken(identity);
+            return (role == "admin" || role == "super_admin");
         }
     }
 }

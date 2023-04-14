@@ -1,5 +1,6 @@
 ﻿using System.Reflection.Metadata.Ecma335;
 using System.Security.Claims;
+using System.Security.Principal;
 using DB.Models;
 using DB.Models.DTOs;
 using Microsoft.AspNetCore.Authorization;
@@ -27,14 +28,20 @@ namespace OperationalAdministrator.Controllers
         // GET: api/<UsersControllercs>
         [HttpGet]
         [Authorize]
-        public IEnumerable<User> Get() => userService.GetUsers();
+        public IActionResult Get() 
+        {
+            if(!verifyAdmin(HttpContext.User.Identity as ClaimsIdentity)) return Unauthorized(Enumerable.Empty<User>());
 
+            return Ok(userService.GetUsers());
+        }
         // GET api/<UsersControllercs>/5
         [HttpGet("{id}")]
         [Authorize]
-        public User Get(int id)
+        public IActionResult Get(int id)
         {
-            return userService.getUser(id);
+            if (!verifyAdmin(HttpContext.User.Identity as ClaimsIdentity)) return Unauthorized();
+
+            return Ok(userService.getUser(id));
         }
 
         // POST api/<UsersControllercs>
@@ -42,15 +49,25 @@ namespace OperationalAdministrator.Controllers
         [Authorize]
         public IActionResult Post([FromBody] UserDTO user)
         {
+            if(user.role == "admin")
+            {
+                if (!verifySuperAdmin(HttpContext.User.Identity as ClaimsIdentity)) return Unauthorized();
+            }
+            else
+            {
+                if (!verifyAdmin(HttpContext.User.Identity as ClaimsIdentity)) return Unauthorized();
+                user.role = "user";
+            }
             return Ok(userService.createUser(user));
         }
 
         // PUT api/<UsersControllercs>/5
         [HttpPut("{id}")]
         [Authorize]
-        public void Put(int id, [FromBody] UserDTO user)
+        public IActionResult Put(int id, [FromBody] UserDTO user)
         {
-            userService.replaceUser(id, user);
+            if (!verifyAdmin(HttpContext.User.Identity as ClaimsIdentity)) return Unauthorized();
+            return Ok(userService.replaceUser(id, user));
         }
 
         // DELETE api/<UsersControllercs>/5
@@ -58,15 +75,7 @@ namespace OperationalAdministrator.Controllers
         [Authorize]
         public IActionResult Delete(int id)
         {
-            ClaimsIdentity identity = HttpContext.User.Identity as ClaimsIdentity;
-
-            int? userId = JWT.verifyToken(identity);
-
-            if (userId == null)
-            {
-                return Unauthorized("Token incorrecto");
-            }
-
+            if (!verifyAdmin(HttpContext.User.Identity as ClaimsIdentity)) return Unauthorized();
             return userService.deleteUser(id) ? Ok() : StatusCode(500);
         }
 
@@ -76,6 +85,18 @@ namespace OperationalAdministrator.Controllers
             AuthResponse response = userService.Auth(model);
 
             return response == null ? Unauthorized("error") : Ok(response);
+        }
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public bool verifyAdmin(ClaimsIdentity identity)
+        {
+            string role = JWT.verifyToken(identity);
+            return (role == "admin" || role == "super_admin");
+        }
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public bool verifySuperAdmin(ClaimsIdentity identity)
+        {
+            string role = JWT.verifyToken(identity);
+            return (role == "super_admin");
         }
     }
 }
