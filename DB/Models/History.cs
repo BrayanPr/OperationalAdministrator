@@ -14,11 +14,16 @@ namespace DB.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int HistoryId { get; set; }
 
+
         public readonly DateTime date = DateTime.Now;
 
         public int NewTeam { get; set; }
 
         public int? OldTeam { get; set; }
+
+        public int UserId { get; set; }
+
+        public virtual User User { get; set; }
 
     }
 }

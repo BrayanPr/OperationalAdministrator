@@ -14,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ITeamService, TeamService>();
+builder.Services.AddScoped<IOperationalService, OperationalService>();
 
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(c =>

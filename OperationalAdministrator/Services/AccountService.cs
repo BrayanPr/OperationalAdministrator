@@ -41,7 +41,14 @@ namespace OperationalAdministrator.Services
 
         public bool deleteAccount(int id)
         {
-            throw new NotImplementedException();
+            Account account = _context.Accounts.FirstOrDefault(x => x.AccountId == id);
+
+            if (account != null)
+            {
+                _context.Accounts.Remove(account);
+                return _context.SaveChanges() > 0;
+            }
+            return false; 
         }
 
 

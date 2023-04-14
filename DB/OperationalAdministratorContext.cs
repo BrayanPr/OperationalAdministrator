@@ -34,11 +34,11 @@ namespace DB
                    .HasForeignKey(e => e.TeamId)
                    .HasPrincipalKey(e => e.TeamId);
 
-            modelBuilder.Entity<Account>()
-                    .HasOne(e => e.Team)
-                    .WithOne(e => e.Account)
-                    .HasPrincipalKey<Team>(e => e.TeamId)
-                    .IsRequired();
+            modelBuilder.Entity<Team>()
+                 .HasMany(e => e.Accounts)
+                 .WithOne(e => e.Team)
+                 .HasForeignKey(e => e.TeamId)
+                 .HasPrincipalKey(e => e.TeamId);
         }
     }
 }

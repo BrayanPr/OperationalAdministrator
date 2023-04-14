@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DB.Migrations
 {
     [DbContext(typeof(OperationalAdministratorContext))]
-    [Migration("20230414172920_v1.0.2")]
-    partial class v102
+    [Migration("20230414193021_v1.0.0")]
+    partial class v100
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -44,8 +44,7 @@ namespace DB.Migrations
 
                     b.HasKey("AccountId");
 
-                    b.HasIndex("TeamId")
-                        .IsUnique();
+                    b.HasIndex("TeamId");
 
                     b.ToTable("Accounts");
                 });
@@ -62,7 +61,12 @@ namespace DB.Migrations
                     b.Property<int?>("OldTeam")
                         .HasColumnType("int");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("HistoryId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("TeamHistory");
                 });
@@ -149,12 +153,23 @@ namespace DB.Migrations
             modelBuilder.Entity("DB.Models.Account", b =>
                 {
                     b.HasOne("DB.Models.Team", "Team")
-                        .WithOne("Account")
-                        .HasForeignKey("DB.Models.Account", "TeamId")
+                        .WithMany("Accounts")
+                        .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Team");
+                });
+
+            modelBuilder.Entity("DB.Models.History", b =>
+                {
+                    b.HasOne("DB.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DB.Models.User", b =>
@@ -168,8 +183,7 @@ namespace DB.Migrations
 
             modelBuilder.Entity("DB.Models.Team", b =>
                 {
-                    b.Navigation("Account")
-                        .IsRequired();
+                    b.Navigation("Accounts");
 
                     b.Navigation("Members");
                 });
