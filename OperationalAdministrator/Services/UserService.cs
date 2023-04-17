@@ -40,6 +40,9 @@ namespace OperationalAdministrator.Services
                 Email = user.Email,
                 Password = user.Password,
                 role = user.role,
+                cv = user.cv,
+                englishLevel = user.englishLevel,
+                experience = user.experience,
             };
 
             newUser.hashPassword(); // Hash the user's password
@@ -118,6 +121,7 @@ namespace OperationalAdministrator.Services
             AuthResponse response = new AuthResponse()
             {
                 token = new JwtSecurityTokenHandler().WriteToken(token),
+                role = existingUser.role
             };
 
             return response;

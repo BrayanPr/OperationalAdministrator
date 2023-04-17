@@ -24,5 +24,11 @@ namespace DB.Models.DTOs
 
         [Required]
         public string role { get; set; } = "user";
+
+        public string cv { get; set; }
+
+        public string experience { get; set; }
+
+        public string englishLevel { get; set; }
     }
 }

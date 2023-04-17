@@ -1,4 +1,5 @@
-﻿using System.Reflection.Metadata.Ecma335;
+﻿using System;
+using System.Reflection.Metadata.Ecma335;
 using System.Security.Claims;
 using System.Security.Principal;
 using DB.Models;
@@ -23,6 +24,15 @@ namespace OperationalAdministrator.Controllers
         public UsersController(IUserService service)
         {
             userService = service;
+        }
+        // GET: api/<UsersControllercs>
+        [HttpGet("getProfile")]
+        [Authorize]
+        public IActionResult MyProfile()
+        {
+            int id = getId(HttpContext.User.Identity as ClaimsIdentity);
+
+            return Ok(userService.getUser(id));
         }
 
         // GET: api/<UsersControllercs>
@@ -97,6 +107,12 @@ namespace OperationalAdministrator.Controllers
         {
             string role = JWT.verifyToken(identity);
             return (role == "super_admin");
+        }
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public int getId(ClaimsIdentity identity)
+        {
+            string _id = JWT.checkId(identity);
+            return (int.Parse(_id));
         }
     }
 }

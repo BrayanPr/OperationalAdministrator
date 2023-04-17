@@ -31,6 +31,12 @@ namespace DB.Models
 
         public int? TeamId { get; set; }
 
+        public string cv { get; set; }
+
+        public string experience { get; set; } 
+
+        public string englishLevel { get; set; }
+
         public virtual Team? Team { get; set; }
 
         public void hashPassword()

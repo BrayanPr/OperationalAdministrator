@@ -21,6 +21,19 @@ namespace OperationalAdministrator.Common
             { 
                 return null;
             }
-        } 
+        }
+        public static string checkId(ClaimsIdentity identity)
+        {
+            try
+            {
+                if (identity.Claims.Count() == 0) return null;
+
+                return identity.Claims.FirstOrDefault(c => c.Type == "id").Value;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DB.Migrations
 {
     [DbContext(typeof(OperationalAdministratorContext))]
-    partial class OperationalAdministratorContextModelSnapshot : ModelSnapshot
+    [Migration("20230417212641_modifing_user_class")]
+    partial class modifing_user_class
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -144,10 +146,6 @@ namespace DB.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("cv")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("englishLevel")
                         .IsRequired()
                         .HasColumnType("longtext");
 
