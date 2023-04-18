@@ -9,18 +9,14 @@ using OperationalAdministrator.Services.Interfaces;
 
 
 var builder = WebApplication.CreateBuilder(args);
-
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
-                      policy =>
-                      {
-                          policy.WithOrigins("http://localhost:4200")
-                          .AllowAnyHeader()
-                           .AllowAnyMethod();
-                      });
+        policy =>
+        {
+            policy.WithOrigins("http://127.0.0.1:4200", "http://localhost:4200", "http://localhost");
+        });
 });
-
 // Add services to the container.
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
@@ -96,10 +92,17 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors(builder =>
+{
+    app.UseCors(builder =>
+   builder.WithOrigins("http://localhost:4200")
+          .AllowAnyHeader()
+          .AllowAnyMethod()
+          .AllowCredentials());
+}
+);
 app.UseHttpsRedirection();
 
-app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();

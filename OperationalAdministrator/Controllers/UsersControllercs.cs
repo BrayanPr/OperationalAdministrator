@@ -37,7 +37,7 @@ namespace OperationalAdministrator.Controllers
 
         // GET: api/<UsersControllercs>
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         public IActionResult Get() 
         {
             if(!verifyAdmin(HttpContext.User.Identity as ClaimsIdentity)) return Unauthorized(Enumerable.Empty<User>());
@@ -56,7 +56,7 @@ namespace OperationalAdministrator.Controllers
 
         // POST api/<UsersControllercs>
         [HttpPost]
-        [Authorize]
+        //[Authorize]
         public IActionResult Post([FromBody] UserDTO user)
         {
             if(user.role == "admin")
