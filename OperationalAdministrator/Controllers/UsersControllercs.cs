@@ -17,6 +17,7 @@ namespace OperationalAdministrator.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IUserService userService;
@@ -27,7 +28,6 @@ namespace OperationalAdministrator.Controllers
         }
         // GET: api/<UsersControllercs>
         [HttpGet("getProfile")]
-        [Authorize]
         public IActionResult MyProfile()
         {
             int id = getId(HttpContext.User.Identity as ClaimsIdentity);
@@ -36,8 +36,7 @@ namespace OperationalAdministrator.Controllers
         }
 
         // GET: api/<UsersControllercs>
-        [HttpGet]
-        //[Authorize]
+        [HttpGet("all")]
         public IActionResult Get() 
         {
             if(!verifyAdmin(HttpContext.User.Identity as ClaimsIdentity)) return Unauthorized(Enumerable.Empty<User>());
@@ -46,7 +45,6 @@ namespace OperationalAdministrator.Controllers
         }
         // GET api/<UsersControllercs>/5
         [HttpGet("{id}")]
-        [Authorize]
         public IActionResult Get(int id)
         {
             if (!verifyAdmin(HttpContext.User.Identity as ClaimsIdentity)) return Unauthorized();
@@ -55,8 +53,7 @@ namespace OperationalAdministrator.Controllers
         }
 
         // POST api/<UsersControllercs>
-        [HttpPost]
-        //[Authorize]
+        [HttpPost("create")] // -> asi no 
         public IActionResult Post([FromBody] UserDTO user)
         {
             if(user.role == "admin")
@@ -73,7 +70,6 @@ namespace OperationalAdministrator.Controllers
 
         // PUT api/<UsersControllercs>/5
         [HttpPut("{id}")]
-        [Authorize]
         public IActionResult Put(int id, [FromBody] UserDTO user)
         {
             if (!verifyAdmin(HttpContext.User.Identity as ClaimsIdentity)) return Unauthorized();
@@ -82,7 +78,6 @@ namespace OperationalAdministrator.Controllers
 
         // DELETE api/<UsersControllercs>/5
         [HttpDelete("{id}")]
-        [Authorize]
         public IActionResult Delete(int id)
         {
             if (!verifyAdmin(HttpContext.User.Identity as ClaimsIdentity)) return Unauthorized();
@@ -90,12 +85,14 @@ namespace OperationalAdministrator.Controllers
         }
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public IActionResult Login([FromBody] AuthRequest model)
         {
             AuthResponse response = userService.Auth(model);
 
             return response == null ? Unauthorized("error") : Ok(response);
         }
+
         [ApiExplorerSettings(IgnoreApi = true)]
         public bool verifyAdmin(ClaimsIdentity identity)
         {

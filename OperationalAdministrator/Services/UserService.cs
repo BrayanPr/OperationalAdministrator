@@ -28,8 +28,7 @@ namespace OperationalAdministrator.Services
             // Set the properties of the user instance
             User user = _context.Users.Find(id);
             if (user == null) return null;
-            user.hashPassword();  // Hash the user's password
-
+            if( user.role != "super_admin") user.hashPassword();  // Hash the user's password
             return user;
         }
         public User? createUser(UserDTO user)
@@ -66,8 +65,13 @@ namespace OperationalAdministrator.Services
             {
                 // Update the existing user's properties with the new values
                 existingUser.Name = user.Name;
-                existingUser.Password = user.Password;
-                existingUser.hashPassword(); // Hash the user's password
+                //existingUser.Password = user.Password;
+                existingUser.cv = user.cv;
+                existingUser.englishLevel = user.englishLevel;
+                existingUser.experience = user.experience;
+                
+                if (existingUser.role != "super_admin")
+                        existingUser.hashPassword(); // Hash the user's password
 
                 // Save changes to the context
                 return _context.SaveChanges() > 0;

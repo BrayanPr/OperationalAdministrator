@@ -14,7 +14,7 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(
         policy =>
         {
-            policy.WithOrigins("http://127.0.0.1:4200", "http://localhost:4200", "http://localhost");
+            policy.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
         });
 });
 // Add services to the container.
@@ -24,7 +24,7 @@ builder.Services.AddScoped<ITeamService, TeamService>();
 builder.Services.AddScoped<IOperationalService, OperationalService>();
 
 builder.Services.AddControllers();
-builder.Services.AddSwaggerGen(c =>
+builder.Services.AddSwaggerGen(c => 
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Opreational Administrator", Version = "v1" });
 
@@ -92,15 +92,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseCors(builder =>
-{
-    app.UseCors(builder =>
-   builder.WithOrigins("http://localhost:4200")
-          .AllowAnyHeader()
-          .AllowAnyMethod()
-          .AllowCredentials());
-}
-);
+app.UseCors();
 app.UseHttpsRedirection();
 
 
