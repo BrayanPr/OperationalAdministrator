@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DB.Models.DTOs
+namespace DB.DTOs
 {
     public class TeamDTO
     {

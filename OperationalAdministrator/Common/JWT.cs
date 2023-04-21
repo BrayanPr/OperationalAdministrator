@@ -35,5 +35,10 @@ namespace OperationalAdministrator.Common
                 return null;
             }
         }
+
+        public static string? verifyToken(string token)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

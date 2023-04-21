@@ -1,5 +1,5 @@
-﻿using DB.Models;
-using DB.Models.DTOs;
+﻿using DB.DTOs;
+using DB.Models;
 using Microsoft.AspNetCore.Mvc;
 using OperationalAdministrator.Models;
 
@@ -9,11 +9,11 @@ namespace OperationalAdministrator.Services.Interfaces
     {
         public IEnumerable<Account> GetAccounts();
 
-        public Account? getAccount(int id);
+        public Account getAccount(int id);
 
-        public Account? createAccount(AccountDTO account);
+        public Account createAccount(AccountDTO account);
 
-        public bool replaceAccount(int id, Account account);
+        public bool replaceAccount(int id, AccountDTO account);
 
         public bool deleteAccount(int id);
     }

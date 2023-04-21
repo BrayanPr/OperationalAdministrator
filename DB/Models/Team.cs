@@ -22,8 +22,5 @@ namespace DB.Models
         [StringLength(50)]
         public string Description { get; set; }
 
-        public ICollection<Account> Accounts { get; set; }
-
-        public ICollection<User> Members { get; set; }
     }
 }

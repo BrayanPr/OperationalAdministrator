@@ -3,6 +3,7 @@ using System;
 using DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DB.Migrations
 {
     [DbContext(typeof(OperationalAdministratorContext))]
-    partial class OperationalAdministratorContextModelSnapshot : ModelSnapshot
+    [Migration("20230419204411_added_time_to_history")]
+    partial class added_time_to_history
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -84,10 +86,6 @@ namespace DB.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Method")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -95,6 +93,9 @@ namespace DB.Migrations
                     b.Property<string>("Path")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("LogId");
 
@@ -179,7 +180,7 @@ namespace DB.Migrations
             modelBuilder.Entity("DB.Models.Account", b =>
                 {
                     b.HasOne("DB.Models.Team", "Team")
-                        .WithMany()
+                        .WithMany("Accounts")
                         .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -201,10 +202,17 @@ namespace DB.Migrations
             modelBuilder.Entity("DB.Models.User", b =>
                 {
                     b.HasOne("DB.Models.Team", "Team")
-                        .WithMany()
+                        .WithMany("Members")
                         .HasForeignKey("TeamId");
 
                     b.Navigation("Team");
+                });
+
+            modelBuilder.Entity("DB.Models.Team", b =>
+                {
+                    b.Navigation("Accounts");
+
+                    b.Navigation("Members");
                 });
 #pragma warning restore 612, 618
         }

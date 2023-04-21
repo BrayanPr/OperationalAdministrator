@@ -14,6 +14,8 @@ COPY . .
 WORKDIR "/src/OperationalAdministrator"
 RUN dotnet build "OperationalAdministrator.csproj" -c Release -o /app/build
 
+
+
 FROM build AS publish
 RUN dotnet publish "OperationalAdministrator.csproj" -c Release -o /app/publish /p:UseAppHost=false
 

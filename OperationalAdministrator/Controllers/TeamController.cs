@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
+using DB.DTOs;
 using DB.Models;
-using DB.Models.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OperationalAdministrator.Common;

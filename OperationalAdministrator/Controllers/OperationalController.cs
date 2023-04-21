@@ -24,7 +24,8 @@ namespace OperationalAdministrator.Controllers
         public IActionResult MoveEmpoyees([FromBody] MoveUserRequest request)
         {
             if (!verifyAdmin(HttpContext.User.Identity as ClaimsIdentity)) return Unauthorized();
-            return Ok(service.MoveUser(request.userID, request.teamID));
+            var res = service.MoveUser(request.userID, request.teamID);
+            return Ok(res);
         }
         [HttpGet("history")]
         public IActionResult GetHistory()
@@ -44,6 +45,12 @@ namespace OperationalAdministrator.Controllers
         {
             if (!verifyAdmin(HttpContext.User.Identity as ClaimsIdentity)) return Unauthorized();
             return Ok(service.GetHistoriesByUser(userId));
+        }
+        [HttpGet("history/user/{userName}")]
+        public IActionResult GetHistoryByUserName(string userName)
+        {
+            if (!verifyAdmin(HttpContext.User.Identity as ClaimsIdentity)) return Unauthorized();
+            return Ok(service.GetHistoriesByUserName(userName));
         }
         [HttpGet("history/team")]
         public IActionResult GetHistoryByTeam([FromQuery] int teamId)

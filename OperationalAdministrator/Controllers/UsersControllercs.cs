@@ -2,8 +2,8 @@
 using System.Reflection.Metadata.Ecma335;
 using System.Security.Claims;
 using System.Security.Principal;
+using DB.DTOs;
 using DB.Models;
-using DB.Models.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -26,7 +26,13 @@ namespace OperationalAdministrator.Controllers
         {
             userService = service;
         }
-        // GET: api/<UsersControllercs>
+        // GET: api/<UsersControllercs>/verifyToken
+        [HttpGet("verifyToken")]
+        public IActionResult CheckToken()
+        {
+            return Ok();
+        }
+        // GET: api/<UsersControllercs>/getProfile
         [HttpGet("getProfile")]
         public IActionResult MyProfile()
         {
@@ -35,7 +41,7 @@ namespace OperationalAdministrator.Controllers
             return Ok(userService.getUser(id));
         }
 
-        // GET: api/<UsersControllercs>
+        // GET: api/<UsersControllercs>/all
         [HttpGet("all")]
         public IActionResult Get() 
         {
@@ -52,7 +58,7 @@ namespace OperationalAdministrator.Controllers
             return Ok(userService.getUser(id));
         }
 
-        // POST api/<UsersControllercs>
+        // POST api/<UsersControllercs>/create
         [HttpPost("create")] // -> asi no 
         public IActionResult Post([FromBody] UserDTO user)
         {
@@ -70,7 +76,7 @@ namespace OperationalAdministrator.Controllers
 
         // PUT api/<UsersControllercs>/5
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] UserDTO user)
+        public IActionResult Put(int id, [FromBody] UserUpdateDTO user)
         {
             if (!verifyAdmin(HttpContext.User.Identity as ClaimsIdentity)) return Unauthorized();
             return Ok(userService.replaceUser(id, user));

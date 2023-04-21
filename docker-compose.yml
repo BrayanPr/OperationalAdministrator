@@ -1,0 +1,44 @@
+version: '3.4'
+
+networks:
+    connectiondb:
+    connectionfront:
+
+services:
+    db:
+        image: mysql:5.7
+        environment:
+            MYSQL_DATABASE: administrador_de_operacion
+            MYSQL_PASSWORD: root
+            MYSQL_ROOT_PASSWORD: root
+       
+        restart: always
+        networks:
+            - connectiondb
+        ports:
+            - 3307:3306
+
+    operationaladministrator:
+        depends_on:
+           - db
+        container_name: operationalAdministrator-app
+        image: ${DOCKER_REGISTRY-}operationaladministrator
+        build:
+            context: .
+            dockerfile: OperationalAdministrator/Dockerfile
+        ports:
+            - 8001:80/tcp
+            - 8000:443/tcp
+        networks:
+            - connectiondb
+            - connectionfront
+
+    #front:
+    #    depends_on:
+    #       - operationaladministrator
+    #    container_name: operationalAdministrator-front-app
+    #    image: brayanpr/nfront:latest
+    #    ports:
+    #        - 4200:80
+    #    networks:
+    #        - connectionfront
