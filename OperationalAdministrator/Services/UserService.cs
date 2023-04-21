@@ -24,16 +24,14 @@ namespace OperationalAdministrator.Services
             _context = context;
             _configuration = configuration;
         }
-  
         public IEnumerable<User> GetUsers() => _context.Users.ToList();
-
-        public User getUser(int id)
+        public User? getUser(int id)
         {
-                User user = _context.Users.Find(id);
-                // Set the properties of the user instance
-                if (user == null) throw new NotFoundException($"User with id: {id} not found");
-                if (user.role != "super_admin") user.hashPassword();  // Hash the user's password   
-                return user;
+            // Set the properties of the user instance
+            User user = _context.Users.Find(id);
+            if (user == null) return null;
+            if( user.role != "super_admin") user.hashPassword();  // Hash the user's password
+            return user;
         }
         public User createUser(UserDTO user)
         {
@@ -86,8 +84,8 @@ namespace OperationalAdministrator.Services
             existingUser.englishLevel = user.englishLevel;
             existingUser.experience = user.experience;
                 
-            if (existingUser.role != "super_admin") 
-                    existingUser.hashPassword(); // Hash the user's password
+                if (existingUser.role != "super_admin")
+                        existingUser.hashPassword(); // Hash the user's password
 
             // Save changes to the context
             try
