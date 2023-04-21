@@ -70,7 +70,7 @@ namespace OperationalAdministrator.Controllers
 
         // PUT api/<UsersControllercs>/5
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] UserDTO user)
+        public IActionResult Put(int id, [FromBody] UserUpdateDTO user)
         {
             if (!verifyAdmin(HttpContext.User.Identity as ClaimsIdentity)) return Unauthorized();
             return Ok(userService.replaceUser(id, user));

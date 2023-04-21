@@ -13,7 +13,7 @@ namespace OperationalAdministrator.Services.Interfaces
 
         public Account? createAccount(AccountDTO account);
 
-        public bool replaceAccount(int id, Account account);
+        public bool replaceAccount(int id, AccountDTO account);
 
         public bool deleteAccount(int id);
     }

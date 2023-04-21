@@ -3,6 +3,7 @@ using System;
 using DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DB.Migrations
 {
     [DbContext(typeof(OperationalAdministratorContext))]
-    partial class OperationalAdministratorContextModelSnapshot : ModelSnapshot
+    [Migration("20230420165018_log_modified")]
+    partial class log_modified
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -179,7 +181,7 @@ namespace DB.Migrations
             modelBuilder.Entity("DB.Models.Account", b =>
                 {
                     b.HasOne("DB.Models.Team", "Team")
-                        .WithMany()
+                        .WithMany("Accounts")
                         .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -201,10 +203,17 @@ namespace DB.Migrations
             modelBuilder.Entity("DB.Models.User", b =>
                 {
                     b.HasOne("DB.Models.Team", "Team")
-                        .WithMany()
+                        .WithMany("Members")
                         .HasForeignKey("TeamId");
 
                     b.Navigation("Team");
+                });
+
+            modelBuilder.Entity("DB.Models.Team", b =>
+                {
+                    b.Navigation("Accounts");
+
+                    b.Navigation("Members");
                 });
 #pragma warning restore 612, 618
         }

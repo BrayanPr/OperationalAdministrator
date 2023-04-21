@@ -14,9 +14,9 @@ namespace DB.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int LogId { get; set; } // primary key for database
-        public int? UserId { get; set; } // nullable int for user id
         public string Method { get; set; } // string for method used
         public string Path { get; set; } // string for path
+        public string Message { get; set; }// the error message
         public DateTime Date { get; set; } = DateTime.Now; // DateTime for current date time
 
     }

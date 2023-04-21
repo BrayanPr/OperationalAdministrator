@@ -2,18 +2,16 @@
 using System.Runtime.Intrinsics.X86;
 using DB.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace DB
 {
     public class OperationalAdministratorContext : DbContext
     {
-        public OperationalAdministratorContext()
-        {
-        }
-
         public OperationalAdministratorContext (DbContextOptions<OperationalAdministratorContext> options) : base (options) 
         {
-            
+
         }
 
         public DbSet<User> Users { get; set; }
@@ -28,17 +26,6 @@ namespace DB
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Team>()
-                   .HasMany(e => e.Members)
-                   .WithOne(e => e.Team)
-                   .HasForeignKey(e => e.TeamId)
-                   .HasPrincipalKey(e => e.TeamId);
-
-            modelBuilder.Entity<Team>()
-                 .HasMany(e => e.Accounts)
-                 .WithOne(e => e.Team)
-                 .HasForeignKey(e => e.TeamId)
-                 .HasPrincipalKey(e => e.TeamId);
 
             modelBuilder.Entity<User>()
                 .HasIndex(e => e.Name)

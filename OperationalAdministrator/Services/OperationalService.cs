@@ -6,20 +6,30 @@ namespace OperationalAdministrator.Services
 {
     public class OperationalService : IOperationalService
     {
+
         private OperationalAdministratorContext _context;
 
-        public OperationalService(OperationalAdministratorContext context) => _context = context;
+        private IUserService userService;
+
+        private ITeamService teamService;
+
+        public OperationalService(IUserService _userService, ITeamService _teamService, OperationalAdministratorContext context) 
+        { 
+            _context = context;
+            teamService = _teamService;
+            userService = _userService;
+        }
         public IEnumerable<History> GetHistories() => _context.TeamHistory.ToList();
         public IEnumerable<History> GetHistoriesByDates(DateTime startDate, DateTime endDate) => _context.TeamHistory.Where(x => x.date <= endDate && x.date >= startDate).ToList();
         public IEnumerable<History> GetHistoriesByTeam(int teamID) => _context.TeamHistory.Where(x=>x.NewTeam ==  teamID || x.OldTeam == teamID).ToList();
         public IEnumerable<History> GetHistoriesByUser(int userID) => _context.TeamHistory.Where(x=>x.UserId == userID).ToList();
         public History? MoveUser(int userID, int teamID)
         {
-            User user = _context.Users.Where(x=>x.UserId != userID).FirstOrDefault();
+            User user = this.userService.getUser(userID);
 
             if (user == null || user.TeamId == teamID) return null;
 
-            Team team = _context.Teams.Where(x => x.TeamId == teamID).FirstOrDefault();
+            Team team = this.teamService.getTeam(teamID);
 
             if (team == null) return null;
 
@@ -27,7 +37,7 @@ namespace OperationalAdministrator.Services
             {
                 NewTeam = teamID,
                 OldTeam = user.TeamId,
-                UserId = userID,
+                UserId = user.UserId,
             };
 
             user.TeamId = teamID;

@@ -15,7 +15,7 @@ namespace DB.Models
         public int HistoryId { get; set; }
 
 
-        public readonly DateTime date = DateTime.Now;
+        public DateTime date { get; set; } = DateTime.Now;
 
         public int NewTeam { get; set; }
 

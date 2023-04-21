@@ -14,7 +14,7 @@ namespace OperationalAdministrator.Services
             _context = context;
         }
         public IEnumerable<Account> GetAccounts () => _context.Accounts.ToList();
-        public Account? getAccount(int id) => _context.Accounts.FirstOrDefault( a => a.TeamId == id);
+        public Account? getAccount(int id) => _context.Accounts.FirstOrDefault( a => a.AccountId == id);
 
         public Account? createAccount(AccountDTO account)
         {
@@ -51,11 +51,19 @@ namespace OperationalAdministrator.Services
             return false; 
         }
 
-
-
-        public bool replaceAccount(int id, Account account)
+        public bool replaceAccount(int id, AccountDTO account)
         {
-            throw new NotImplementedException();
+            Account existing_account = _context.Accounts.FirstOrDefault( x => x.AccountId == id);
+
+            if (existing_account != null)
+            {
+                existing_account.CustomerName = account.CustomerName;
+                existing_account.AccountName = account.AccountName;
+                existing_account.OperationManagerName = account.OperationManagerName;
+                existing_account.TeamId = account.TeamId;
+                return (_context.SaveChanges() > 0);
+            }
+            return false;
         }
 
     }

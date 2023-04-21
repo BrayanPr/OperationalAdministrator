@@ -13,10 +13,11 @@ namespace OperationalAdministrator.Services.Interfaces
 
         public User? createUser(UserDTO user);
 
-        public bool replaceUser(int id, UserDTO user);
+        public bool replaceUser(int id, UserUpdateDTO user);
 
         public bool deleteUser(int id);
 
         public AuthResponse? Auth(AuthRequest model);
+
     }
 }

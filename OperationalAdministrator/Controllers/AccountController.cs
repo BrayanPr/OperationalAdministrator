@@ -48,12 +48,13 @@ namespace OperationalAdministrator.Controllers
             return Ok(service.createAccount(account));
         }
 
-        //// PUT api/<AccountController>/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-
-        //}
+        // PUT api/<AccountController>/5
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, [FromBody] AccountDTO account)
+        {
+            if (!verifyAdmin(HttpContext.User.Identity as ClaimsIdentity)) return Unauthorized();
+            return Ok(service.replaceAccount(id, account));
+        }
 
         // DELETE api/<AccountController>/5
         [HttpDelete("{id}")]

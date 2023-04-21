@@ -17,18 +17,21 @@ namespace OperationalAdministrator.Services
     {
         private readonly IConfiguration _configuration;
         private OperationalAdministratorContext _context;
+
         public UserService(OperationalAdministratorContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
         }
+
         public IEnumerable<User> GetUsers() => _context.Users.ToList();
+
         public User? getUser(int id)
         {
             // Set the properties of the user instance
             User user = _context.Users.Find(id);
             if (user == null) return null;
-            if( user.role != "super_admin") user.hashPassword();  // Hash the user's password
+            if (user.role != "super_admin") user.hashPassword();  // Hash the user's password
             return user;
         }
         public User? createUser(UserDTO user)
@@ -48,16 +51,11 @@ namespace OperationalAdministrator.Services
 
             // Add the user to the context and save changes
             User nUser = _context.Users.Add(newUser).Entity;
-
-            // Verify the query executes correctly
-            if(_context.SaveChanges() > 0){
-                return nUser;
-            }
-
-            //else return null
-            return null;
+                // Verify the query executes correctly
+            _context.SaveChanges();
+            return nUser;
         }
-        public bool replaceUser(int id, UserDTO user)
+        public bool replaceUser(int id, UserUpdateDTO user)
         {
             User existingUser = _context.Users.Find(id);
 
@@ -70,7 +68,7 @@ namespace OperationalAdministrator.Services
                 existingUser.englishLevel = user.englishLevel;
                 existingUser.experience = user.experience;
                 
-                if (existingUser.role != "super_admin")
+                if (existingUser.role != "super_admin") 
                         existingUser.hashPassword(); // Hash the user's password
 
                 // Save changes to the context
