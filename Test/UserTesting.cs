@@ -2,7 +2,6 @@ using System.IdentityModel.Tokens.Jwt;
 using DB;
 using DB.DTOs;
 using DB.Models;
-using DB.Models.DTOs;
 using Moq;
 using OperationalAdministrator.Common;
 using OperationalAdministrator.Controllers;

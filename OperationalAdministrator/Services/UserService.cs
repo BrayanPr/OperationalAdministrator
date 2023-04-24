@@ -68,14 +68,15 @@ namespace OperationalAdministrator.Services
         }
         public bool replaceUser(int id, UserUpdateDTO user)
         {
-            User existingUser = _context.Users.Find(id);
-
-            if (existingUser == null) throw new NotFoundException($"User with id: {id} not found");
+            User? existingUser = null;
 
             existingUser = _context.Users.Where(x => x.Name == user.Name).FirstOrDefault();
 
-            if (existingUser != null) throw new DuplicatedEntryException($"User with name: {existingUser.Name} already registered");
+            if (existingUser != null && existingUser.UserId != id) throw new DuplicatedEntryException($"User with name: {existingUser.Name} already registered");
 
+            existingUser = _context.Users.Find(id);
+
+            if (existingUser == null) throw new NotFoundException($"User with id: {id} not found");
 
             // Update the existing user's properties with the new values
             existingUser.Name = user.Name;

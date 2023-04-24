@@ -1,7 +1,6 @@
 ﻿using DB;
 using DB.DTOs;
 using DB.Models;
-using DB.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using OperationalAdministrator.Services;

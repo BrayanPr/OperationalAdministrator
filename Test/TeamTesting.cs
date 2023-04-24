@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using DB.DTOs;
 using DB.Models;
-using DB.Models.DTOs;
 using Moq;
 using OperationalAdministrator.Services;
 using OperationalAdministrator.Services.Interfaces;
