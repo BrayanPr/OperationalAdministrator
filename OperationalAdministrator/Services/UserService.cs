@@ -85,8 +85,8 @@ namespace OperationalAdministrator.Services
             existingUser.englishLevel = user.englishLevel;
             existingUser.experience = user.experience;
                 
-                if (existingUser.role != "super_admin")
-                        existingUser.hashPassword(); // Hash the user's password
+                //if (existingUser.role != "super_admin")
+                //        existingUser.hashPassword(); // Hash the user's password
 
             // Save changes to the context
             try
